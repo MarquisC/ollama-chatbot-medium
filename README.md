@@ -1,4 +1,4 @@
-# Ollama Chatbot Integration with Flask and Poetry
+# Ollama Chatbot Integration 
 
 
 ## Prerequisites
