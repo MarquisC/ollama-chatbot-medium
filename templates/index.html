@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #343a40; /* Dark background color */
+            color: #fff; /* Light text color */
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            padding-bottom: 60px; /* Space for the text box */
+        }
+        .container {
+            flex: 1; /* Grow to fill available space */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .history {
+            max-height: 80%; /* Limit height of history area */
+            overflow-y: auto; /* Enable vertical scroll if needed */
+        }
+          .form-container {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50%; /* Set the width to half the screen */
+        background-color: #495057; /* Dark text box background color */
+        padding: 10px;
+    }
+
+    /* Adjust the width of the textbox */
+    .form-control {
+        width: 100%; /* Set the width to 100% of the container */
+        background-color: #495057; /* Dark text box background color */
+        color: #fff; /* Light text color */
+    }
+        .btn-primary {
+            background-color: #007bff; /* Primary button color */
+            border-color: #007bff; /* Primary button border color */
+            width: 80px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* Primary button hover color */
+            border-color: #0056b3; /* Primary button hover border color */
+        }
+        /* Loading animation styles */
+        .loading-container {
+            display: none; /* Initially hide the loading container */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999; /* Ensure it's on top of other elements */
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light gray border */
+            border-top: 4px solid #3498db; /* Blue border for animation */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite; /* Rotate animation */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="history" id="responseContainer">
+        <!-- Chat history will be displayed here -->
+    </div>
+</div>
+
+<div class="form-container">
+    <form id="chatForm">
+        <div class="input-group">
+            <input type="text" class="form-control" id="messageInput" placeholder="Type your message">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Chat</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Loading animation -->
+<div class="loading-container" id="loading">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#chatForm').submit(function (e) {
+            e.preventDefault();
+            var message = $('#messageInput').val();
+            $('#loading').show(); // Show loading animation
+            $.ajax({
+                type: 'POST',
+                url: '/process_message',
+                data: {'message': message},
+                success: function (response) {
+                    $('#loading').hide(); // Hide loading animation
+                    $('#responseContainer').append('<div class="alert alert-info">' + response + '</div>');
+                }
+            });
+        });
+        // Hide loading animation when the page finishes loading
+        $(window).on('load', function () {
+            $('#loading').hide();
+        });
+    });
+</script>
+</body>
+</html>
