@@ -2,7 +2,6 @@ from ollama import Client
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
-ollama_client = Client(host='http://localhost:11434')
 
 
 @app.route('/')
@@ -10,8 +9,9 @@ def index():
     return render_template('index.html')
 
 
-chat_history: list[dict] = list()
 
+ollama_client = Client(host='http://localhost:11434')
+chat_history: list[dict] = list()
 
 @app.route('/process_message', methods=['POST'])
 def process_message():
